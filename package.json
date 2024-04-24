@@ -1,0 +1,32 @@
+{
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "mongodb": "^6.5.0",
+    "mongoose": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/express-session": "^1.18.0",
+    "@types/node": "^20.12.7",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "build-dev": "tsc",
+    "build-prod": "tsc --project tsconfig.prod.json",
+    "start": "node production/app.js",
+    "dev": "nodemon src/app.ts"
+  },
+  "name": "fav_spotify_back",
+  "version": "1.0.0",
+  "main": "app.js",
+  "keywords": [],
+  "author": "Lucas David Fernandez",
+  "license": "ISC",
+  "description": "Simple Spotify app to save favorite songs"
+}
