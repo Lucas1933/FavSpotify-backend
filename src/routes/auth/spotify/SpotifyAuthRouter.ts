@@ -17,7 +17,6 @@ export default class SpotifyAuthRouter {
 
     this.router.get("/spotify", this.spotifyAuthUrlHandler);
     this.router.get("/callback/spotify", this.spotifyCallbackHandler);
-    // Add more routes as needed
   }
 
   private async spotifyAuthUrlHandler(
@@ -47,13 +46,11 @@ export default class SpotifyAuthRouter {
       const token = await this.spotifyProvider.getAuthorizationToken(
         code as string
       );
+
       console.log("succesfull response from spotify api ", token);
       res.send(token);
     }
   }
-
-  // Define more route handlers as needed
-
   public getRouter(): Router {
     return this.router;
   }
