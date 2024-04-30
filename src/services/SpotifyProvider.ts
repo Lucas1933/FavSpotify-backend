@@ -1,12 +1,12 @@
-import HttpClient from "../../../utils/HttpClient";
-import Utils from "../../../utils/Utils";
+import HttpClient from "../utils/HttpClient";
+import Utils from "../utils/Utils";
 
 export default class SpotifyProvider {
   private clientId: string;
   private clientSecret: string;
   private redirectUri: string;
   private scope: string;
-  private state: string;
+  private stateCode: string;
   private httpClient: HttpClient;
   constructor() {
     this.clientId = process.env.SPOTIFY_CLIENT_ID as string;
@@ -14,23 +14,21 @@ export default class SpotifyProvider {
     this.redirectUri =
       "http://localhost:3000/favspotify/api/auth/callback/spotify";
     this.scope = "user-read-private user-read-email";
-    this.state = "";
-    this.httpClient = new HttpClient("https://api.spotify.com/v1");
+    this.stateCode = process.env.SPOTIFY_STATE_CODE as string;
+    this.httpClient = new HttpClient("");
   }
 
   public async getAuthorizationUrl(): Promise<string> {
-    await this.setState();
     const query = {
       response_type: "code",
       client_id: this.clientId,
       scope: this.scope,
       redirect_uri: this.redirectUri,
-      state: this.state,
+      state: this.stateCode,
     };
     const url =
       "https://accounts.spotify.com/authorize?" +
       (await Utils.objectToQueryString(query));
-
     return url;
   }
 
@@ -54,13 +52,5 @@ export default class SpotifyProvider {
       { headers: headers }
     );
     return token;
-  }
-
-  public getState(): string {
-    return this.state;
-  }
-
-  private async setState(): Promise<void> {
-    this.state = await Utils.generateRandomString(16);
   }
 }
