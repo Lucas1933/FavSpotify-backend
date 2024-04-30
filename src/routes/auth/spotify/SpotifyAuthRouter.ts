@@ -1,6 +1,7 @@
 import express, { Router, Request, Response, NextFunction } from "express";
 import SpotifyProvider from "./SpotifyProvider";
 import { UNAUTHORIZED } from "../../../utils/http_status_code";
+import { SpotifyAuthRouterError } from "../../../utils/errors/SpotifyAuthRouterError";
 
 export default class SpotifyAuthRouter {
   private router: Router;
@@ -34,21 +35,25 @@ export default class SpotifyAuthRouter {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const { code, state, error } = req.query;
-    if (error) {
-      if (state != req.session.spotifyStateCode) {
-        console.log("state ", state);
-        console.log("req.session.state ", req.session.spotifyStateCode);
+    try {
+      const { code, state, error } = req.query;
+      if (error) {
+        console.log(error);
+        if (state != req.session.spotifyStateCode) {
+          throw new SpotifyAuthRouterError(
+            "The status code provided is not the same as the one received",
+            UNAUTHORIZED
+          );
+        }
+      } else {
+        const token = await this.spotifyProvider.getAuthorizationToken(
+          code as string
+        );
+        req.session.spotifyWebApiToken = token;
+        res.redirect("/app");
       }
-      console.log("something went wrong", error);
-      res.sendStatus(UNAUTHORIZED).send({ code: UNAUTHORIZED, error });
-    } else {
-      const token = await this.spotifyProvider.getAuthorizationToken(
-        code as string
-      );
-
-      console.log("succesfull response from spotify api ", token);
-      res.send(token);
+    } catch (error) {
+      next(error);
     }
   }
   public getRouter(): Router {

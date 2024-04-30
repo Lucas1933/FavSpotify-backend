@@ -64,11 +64,3 @@ export default class SpotifyProvider {
     this.state = await Utils.generateRandomString(16);
   }
 }
-
-interface SpotifyAuthorizationToken {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-  refresh_token: string;
-  scope: string;
-}

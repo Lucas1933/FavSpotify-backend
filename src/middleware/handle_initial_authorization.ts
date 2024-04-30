@@ -8,12 +8,12 @@ export default function handleInitialAuthorization(
     if (req.sessionID!) {
       res.redirect("http://localhost:3000/login");
     }
+
     if (req.url.includes("login")) {
       res.redirect("http://localhost:3000/app");
     }
     next();
   } catch (error) {
-    console.log("error in handle_initial_auth");
     next(error);
   }
 }
