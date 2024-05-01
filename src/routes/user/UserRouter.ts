@@ -1,5 +1,5 @@
 import express, { Router, Request, Response, NextFunction } from "express";
-import SpotifyWebApi from "../../services/SpotifyWebApi";
+import SpotifyWebApi from "@services/spotify/SpotifyWebApi";
 
 export default class UserRouter {
   private router: Router;

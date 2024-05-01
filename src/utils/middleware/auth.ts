@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { FORBIDDEN, UNAUTHORIZED } from "../http_status_code";
+import { FORBIDDEN, UNAUTHORIZED } from "@utils/http_status_code";
 
 export default function authMiddleware(privacyType: string) {
   return (req: Request, res: Response, next: NextFunction) => {

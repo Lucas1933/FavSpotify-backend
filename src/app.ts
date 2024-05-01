@@ -1,25 +1,26 @@
 import express, { NextFunction, Request, Response } from "express";
 import session from "express-session";
-import dotenv from "dotenv";
-import SpotifyAuthRouter from "./routes/auth/spotify/SpotifyAuthRouter";
-import {} from "../types";
+import MongoStore from "connect-mongo";
+import config from "./config";
+
+import SpotifyAuthRouter from "@routes/auth/spotify/SpotifyAuthRouter";
+import UserRouter from "@routes/user/UserRouter";
+import SearchRouter from "@routes/search/SearchRouter";
+import authMiddleware from "@utils/middleware/auth";
+
 import { CustomError } from "./utils/errors/SpotifyAuthRouterError";
 import { INTERNAL_SERVER_ERROR } from "./utils/http_status_code";
-import UserRouter from "./routes/user/UserRouter";
-import authMiddleware from "./utils/middleware/auth";
-import MongoStore from "connect-mongo";
-import SearchRouter from "./routes/search/SearchRouter";
+import {} from "../types";
 
-dotenv.config();
 const app = express();
-const port = process.env.PORT;
+const port = config.app.PORT;
 const spotifyAuthRouter = new SpotifyAuthRouter();
 const userRouter = new UserRouter();
 const searchRouter = new SearchRouter();
 
 app.use(
   session({
-    secret: process.env.COOKIE_SESSION_SECRET as string,
+    secret: config.secret.COOKIE_SESSION_SECRET as string,
     name: "session",
     cookie: {
       path: "/",
@@ -27,7 +28,7 @@ app.use(
       secure: false,
       maxAge: 3600 * 1000,
     },
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL as string }),
+    store: MongoStore.create({ mongoUrl: config.mongo.URL as string }),
     saveUninitialized: false,
     resave: false,
   })

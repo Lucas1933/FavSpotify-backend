@@ -1,4 +1,4 @@
-import HttpClient from "../utils/HttpClient";
+import HttpClient from "@services/HttpClient";
 
 export default class SpotifyWebApi {
   private httpClient: HttpClient;

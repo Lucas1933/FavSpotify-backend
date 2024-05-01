@@ -1,6 +1,6 @@
 import express, { Router, Request, Response, NextFunction } from "express";
-import { OK } from "../../utils/http_status_code";
-import SpotifyWebApi from "../../services/SpotifyWebApi";
+import { OK } from "@utils/http_status_code";
+import SpotifyWebApi from "@services/spotify/SpotifyWebApi";
 export default class SearchRouter {
   private router: Router;
   private spotifyApi: SpotifyWebApi;

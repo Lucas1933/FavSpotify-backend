@@ -1,6 +1,6 @@
-import HttpClient from "../utils/HttpClient";
-import Utils from "../utils/Utils";
-
+import HttpClient from "@services/HttpClient";
+import objectToQueryString from "@utils/object_to_query_string";
+import config from "@src/config";
 export default class SpotifyProvider {
   private clientId: string;
   private clientSecret: string;
@@ -9,12 +9,12 @@ export default class SpotifyProvider {
   private stateCode: string;
   private httpClient: HttpClient;
   constructor() {
-    this.clientId = process.env.SPOTIFY_CLIENT_ID as string;
-    this.clientSecret = process.env.SPOTIFY_CLIENT_SECRET as string;
+    this.clientId = config.secret.SPOTIFY_CLIENT_ID as string;
+    this.clientSecret = config.secret.SPOTIFY_CLIENT_SECRET as string;
     this.redirectUri =
       "http://localhost:3000/favspotify/api/auth/callback/spotify";
     this.scope = "user-read-private user-read-email";
-    this.stateCode = process.env.SPOTIFY_STATE_CODE as string;
+    this.stateCode = config.secret.SPOTIFY_STATE_CODE as string;
     this.httpClient = new HttpClient("");
   }
 
@@ -28,7 +28,7 @@ export default class SpotifyProvider {
     };
     const url =
       "https://accounts.spotify.com/authorize?" +
-      (await Utils.objectToQueryString(query));
+      (await objectToQueryString(query));
     return url;
   }
 
