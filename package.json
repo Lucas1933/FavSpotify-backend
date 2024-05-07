@@ -30,7 +30,7 @@
     "build-dev": "tsc",
     "build-prod": "tsc --project tsconfig.prod.json",
     "start": "node production/app.js",
-    "dev": "nodemon src/app.ts"
+    "dev": "nodemon src/app.ts developement"
   },
   "name": "fav_spotify_back",
   "version": "1.0.0",

@@ -13,11 +13,12 @@ import RegisterRouter from "@routes/register/RegisterRouter";
 import authMiddleware from "@utils/middleware/auth";
 import connectToDatabase from "@repository/mongo_connection";
 
-import { CustomError } from "./utils/errors/SpotifyAuthRouterError";
+import { CustomError } from "./utils/errors/CustomError";
 import { INTERNAL_SERVER_ERROR } from "./utils/http_status_code";
 import {} from "../types";
 
 const app = express();
+
 app.use(
   cors({
     origin: "http://localhost:5173", // Allow requests from this origin
@@ -80,6 +81,6 @@ app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
   }
 });
 app.listen(port, async () => {
-  await connectToDatabase();
+  /*   await connectToDatabase(); */
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
