@@ -7,13 +7,17 @@ import {
   UNAUTHORIZED,
 } from "@utils/http_status_code";
 import { SpotifyAuthRouterError } from "@utils/errors/SpotifyAuthRouterError";
+import SpotifyWebApi from "@src/services/spotify/SpotifyWebApi";
+import UserService from "@src/services/user/UserService";
 
 export default class SpotifyAuthRouter {
   private router: Router;
   private spotifyProvider: SpotifyProvider;
+  private spotifyWebApi: SpotifyWebApi;
   constructor() {
     this.router = express.Router();
     this.spotifyProvider = new SpotifyProvider();
+    this.spotifyWebApi = new SpotifyWebApi();
     this.initializeRoutes();
   }
 
@@ -57,7 +61,41 @@ export default class SpotifyAuthRouter {
         const token = await this.spotifyProvider.getAuthorizationToken(
           code as string
         );
-        req.session.spotifyWebApiToken = token;
+        const userInformation = await this.spotifyWebApi.getUserInformation(
+          token
+        );
+        const userFromDb = await UserService.findUserByEmail(
+          userInformation.email
+        );
+
+        if (!userFromDb) {
+          req.session.user = {
+            email: userInformation.email,
+            username: userInformation.display_name,
+            profileImage: userInformation.images,
+            isRegistered: false,
+            favorites: [{}],
+            tokens: {
+              ...token,
+              expiration_date: new Date().getTime() + token.expires_in * 1000,
+            },
+          };
+        } else {
+          req.session.user = {
+            email: userFromDb.email,
+            username: userFromDb.username,
+            profileImage: userFromDb.profileImage,
+            isRegistered: true,
+            favorites: userFromDb.favorites,
+            tokens: {
+              ...token,
+              expiration_date: new Date().getTime() + token.expires_in * 1000,
+            },
+          };
+          req.session.cookie.expires = new Date(
+            Date.now() + 30 * 24 * 60 * 60 * 1000
+          );
+        }
         res.status(OK).send({ status: OK, message: "User authenticated" });
       }
     } catch (error) {

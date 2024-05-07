@@ -22,10 +22,11 @@ export default class UserRouter {
     next: NextFunction
   ): Promise<void> {
     try {
-      const userInfo = await this.spotifyApi.getUserInformation(
-        req.session.spotifyWebApiToken!
-      );
-      res.send(userInfo);
+      /*   const userInfo = await this.spotifyApi.getUserInformation(
+        req.session.user!.token
+      ); */
+
+      res.send(req.session.user);
     } catch (error) {
       next(error);
     }

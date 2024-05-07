@@ -1,6 +1,6 @@
 import { CustomError } from "./CustomError";
 
-export class SpotifyAuthRouterError extends CustomError {
+export class RegisterRouterError extends CustomError {
   constructor(
     message: string,
     statusCode: number,

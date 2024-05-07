@@ -20,7 +20,7 @@ export default class SearchRouter {
     next: NextFunction
   ): Promise<void> {
     const searchResult = await this.spotifyApi.getItem(
-      req.session.spotifyWebApiToken!
+      req.session.user!.tokens
     );
     res.status(OK).send(searchResult);
   }

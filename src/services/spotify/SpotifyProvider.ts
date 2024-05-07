@@ -34,7 +34,7 @@ export default class SpotifyProvider {
 
   public async getAuthorizationToken(
     code: string
-  ): Promise<SpotifyAuthorizationToken> {
+  ): Promise<SpotifyAuthorizationTokens> {
     const concatenatedString = `${this.clientId}:${this.clientSecret}`;
     const buffer = Buffer.from(concatenatedString, "utf-8");
     const body = {
@@ -46,7 +46,7 @@ export default class SpotifyProvider {
       "content-type": "application/x-www-form-urlencoded",
       Authorization: "Basic " + buffer.toString("base64"),
     };
-    const token: SpotifyAuthorizationToken = await this.httpClient.post(
+    const token: SpotifyAuthorizationTokens = await this.httpClient.post(
       "https://accounts.spotify.com/api/token",
       body,
       { headers: headers }

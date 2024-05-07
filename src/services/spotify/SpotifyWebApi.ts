@@ -6,7 +6,7 @@ export default class SpotifyWebApi {
     this.httpClient = new HttpClient("https://api.spotify.com/v1");
   }
 
-  public async getItem(token: SpotifyAuthorizationToken /* query: string */) {
+  public async getItem(token: SpotifyAuthorizationTokens /* query: string */) {
     const headers = {
       Authorization: "Bearer " + token.access_token,
     };
@@ -47,11 +47,15 @@ export default class SpotifyWebApi {
 
   public async saveTrack() {}
 
-  public async getUserInformation(token: SpotifyAuthorizationToken) {
+  public async getUserInformation(
+    token: SpotifyAuthorizationTokens
+  ): Promise<UserInformation> {
     const headers = {
       Authorization: "Bearer " + token.access_token,
     };
-    const userInfo = await this.httpClient.get("/me", { headers });
+    const userInfo = (await this.httpClient.get("/me", {
+      headers,
+    })) as UserInformation;
     return userInfo;
   }
 }

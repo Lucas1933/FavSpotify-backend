@@ -3,10 +3,10 @@ import { FORBIDDEN, UNAUTHORIZED } from "@utils/http_status_code";
 
 export default function authMiddleware(privacyType: string) {
   return (req: Request, res: Response, next: NextFunction) => {
-    const { spotifyWebApiToken } = req.session;
+    const { user } = req.session;
     switch (privacyType) {
       case "PRIVATE":
-        if (spotifyWebApiToken) next();
+        if (user) next();
         else
           res.status(UNAUTHORIZED).send({
             status: UNAUTHORIZED,
@@ -14,7 +14,7 @@ export default function authMiddleware(privacyType: string) {
           });
         break;
       case "NO_AUTHENTICATED":
-        if (!spotifyWebApiToken) next();
+        if (!user) next();
         else
           res.status(FORBIDDEN).send({
             status: FORBIDDEN,
