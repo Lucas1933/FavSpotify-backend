@@ -42,4 +42,22 @@ declare global {
     images: { url: string }[];
   }
 }
+
+/**
+ * Extending transport
+ */
+declare module "winston/lib/winston/transports" {
+  export interface Transports {
+    MongoDB: MongoDBTransportInstance;
+    MongoDBTransportOptions: MongoDBConnectionOptions;
+  }
+}
+
+declare module "winston-mongodb" {
+  export interface MongoDBTransportInstance
+    extends transports.StreamTransportInstance {
+    new (options?: MongoDBConnectionOptions): MongoDBTransportInstance;
+    query: (callback: Function, options?: any) => Promise<any>;
+  }
+}
 export {};
