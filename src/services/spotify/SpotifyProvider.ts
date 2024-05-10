@@ -1,4 +1,4 @@
-import HttpClient from "@services/HttpClient";
+import HttpClient from "@src/services/http-client/HttpClient";
 import objectToQueryString from "@utils/object_to_query_string";
 import config from "@src/config";
 export default class SpotifyProvider {

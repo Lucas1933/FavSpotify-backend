@@ -1,4 +1,9 @@
-import winston from "winston";
+import {
+  createLogger as createWinstonLogger,
+  format,
+  transports,
+} from "winston";
+
 import {
   MongoDBTransportInstance,
   MongoDBConnectionOptions,
@@ -8,34 +13,33 @@ import { MongoClient } from "mongodb";
 const {
   MongoDB,
 }: { MongoDB: MongoDBTransportInstance } = require("winston-mongodb");
-
 export default function createLogger(mongoClient: Promise<MongoClient>) {
-  if (config.app.ENV == "developements") {
-    const logger = winston.createLogger({
+  const baseFormat = format.combine(
+    format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+    format.errors({ stack: true }),
+    format((info) => {
+      info.level = info.level.toUpperCase();
+      return info;
+    })()
+  );
+  const prettyFormat = format.combine(baseFormat, format.prettyPrint());
+
+  const logger = createWinstonLogger();
+  logger.add(
+    new transports.Console({
+      format: prettyFormat,
       level: "info",
-    });
+    })
+  );
+  if (config.app.ENV != "developement") {
     logger.add(
-      new winston.transports.Console({
-        format: winston.format.simple(),
-      })
-    );
-    return logger;
-  } else {
-    const logger = winston.createLogger();
-    logger.add(
-      new winston.transports.MongoDB({
+      new transports.MongoDB({
         db: mongoClient,
         collection: "logs",
-        format: winston.format.json(),
+        metaKey: "meta",
         level: "error",
       })
     );
-    logger.add(
-      new winston.transports.Console({
-        format: winston.format.simple(),
-        level: "info",
-      })
-    );
-    return logger;
   }
+  return logger;
 }

@@ -47,17 +47,30 @@ export default class SpotifyAuthRouter {
       const { code, state, error } = req.query;
       if (error) {
         if (state != config.secret.SPOTIFY_STATE_CODE) {
-          /*         throw new SpotifyAuthRouterError(
+          throw new SpotifyAuthRouterError(
             "The status code provided is not the same as the one received",
-            UNAUTHORIZED
-          ); */
+            UNAUTHORIZED,
+            "INVALID_STATE_CODE",
+            {
+              spotifyStateCode: config.secret.SPOTIFY_STATE_CODE,
+              query: { error, code, state },
+              request: req,
+            }
+          );
         } else {
-          /*         throw new SpotifyAuthRouterError(
+          throw new SpotifyAuthRouterError(
             "Unexpected error",
-            INTERNAL_SERVER_ERROR
-          ); */
+            INTERNAL_SERVER_ERROR,
+            "SPOTIFY_WEB_API_ERROR",
+            {
+              spotifyStateCode: config.secret.SPOTIFY_STATE_CODE,
+              query: { error, code, state },
+              endpoint: "/callback/spotify",
+            }
+          );
         }
       } else {
+        throw new Error("errorsito");
         const token = await this.spotifyProvider.getAuthorizationToken(
           code as string
         );

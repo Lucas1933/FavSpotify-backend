@@ -1,27 +1,20 @@
 export class CustomError extends Error {
   private statusCode: number;
   private errorCode: string;
-  private timestamp: Date;
   private requestId?: string;
-  private userId?: string;
   private additionalData?: Record<string, any>;
 
   constructor(
     message: string,
     statusCode: number,
     errorCode: string,
-    userId?: string,
     additionalData?: Record<string, any>
   ) {
     super(message);
     this.statusCode = statusCode;
     this.errorCode = errorCode;
-    this.timestamp = new Date();
     this.name = this.constructor.name;
     Error.captureStackTrace(this, this.constructor);
-    if (userId) {
-      this.userId = userId;
-    }
     if (additionalData) {
       this.additionalData = additionalData;
     }
@@ -35,8 +28,17 @@ export class CustomError extends Error {
     return this.errorCode;
   }
 
-  public getTimestamp() {
-    return this.timestamp;
+  public getTimestamp(): string {
+    const now = new Date();
+    const year = now.getFullYear().toString().padStart(4, "0");
+    const month = (now.getMonth() + 1).toString().padStart(2, "0");
+    const day = now.getDate().toString().padStart(2, "0");
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    const seconds = now.getSeconds().toString().padStart(2, "0");
+
+    const formattedDateTime = `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
+    return formattedDateTime;
   }
 
   public getRequestId() {
@@ -45,10 +47,6 @@ export class CustomError extends Error {
 
   public setRequestId(requestId: string) {
     this.requestId = requestId;
-  }
-
-  public getUserId() {
-    return this.userId;
   }
 
   public getAdditionalData() {
