@@ -14,7 +14,7 @@ import RegisterRouter from "@routes/register/RegisterRouter";
 
 import authMiddleware from "@utils/middleware/auth";
 import createLogger from "@utils/logger";
-import getDate from "@utils/getDate";
+import getDate from "@src/utils/get_date";
 import { CustomError } from "@utils/errors/CustomError";
 import { INTERNAL_SERVER_ERROR } from "@utils/http_status_code";
 
