@@ -54,7 +54,7 @@ export default class SpotifyAuthRouter {
             {
               spotifyStateCode: config.secret.SPOTIFY_STATE_CODE,
               query: { error, code, state },
-              request: req,
+              endpoint: "/callback/spotify",
             }
           );
         } else {
@@ -70,7 +70,6 @@ export default class SpotifyAuthRouter {
           );
         }
       } else {
-        throw new Error("errorsito");
         const token = await this.spotifyProvider.getAuthorizationToken(
           code as string
         );
